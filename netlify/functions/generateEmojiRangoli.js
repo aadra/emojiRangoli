@@ -3,15 +3,15 @@ const axios = require('axios');
 
 exports.handler = async function (event) {
   const { OPENAI_API_KEY } = process.env;
-  const { prompt, max_tokens } = JSON.parse(event.body);
+  const { prompt } = JSON.parse(event.body);
 
   try {
     const response = await axios.post(
-      'https://api.openai.com/v1/completions',
+      'https://api.openai.com/v1/images/generations',
       {
-        model: 'text-davinci-003',
         prompt,
-        max_tokens,
+        model: 'dall-e-3',
+        size: "1024x1024"
       },
       {
         headers: {

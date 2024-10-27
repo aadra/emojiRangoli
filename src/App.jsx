@@ -4,22 +4,21 @@ import axios from 'axios';
 function App() {
   const [emoji1, setEmoji1] = useState('');
   const [emoji2, setEmoji2] = useState('');
-  const [rangoli, setRangoli] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   const generateRangoli = async () => {
     setLoading(true);
-    setRangoli('');
+    setImageUrl('');
 
-    const prompt = `Create a beautiful rangoli pattern using these two emojis: ${emoji1} and ${emoji2}. The pattern should resemble a traditional Indian rangoli.`;
-    
+    const prompt = `Create a rangoli pattern with these emojis: ${emoji1} and ${emoji2}. Arrange them in a beautiful, symmetrical pattern typical of traditional Indian rangolis.`;
+
     try {
       const response = await axios.post('/.netlify/functions/generateEmojiRangoli', {
         prompt,
-        max_tokens: 100,
       });
-      const generatedRangoli = response.data.choices[0].text.trim();
-      setRangoli(generatedRangoli);
+      const image_url = response.data.data[0].url;
+      setImageUrl(image_url);
     } catch (error) {
       console.error('Error generating emoji rangoli:', error);
       alert('Failed to generate rangoli.');
@@ -50,7 +49,12 @@ function App() {
           {loading ? 'Generating...' : 'Generate Rangoli'}
         </button>
       </div>
-      {rangoli && <div style={{ fontSize: '24px', marginTop: '20px', whiteSpace: 'pre-line' }}>{rangoli}</div>}
+      {imageUrl && (
+        <div style={{ marginTop: '20px' }}>
+          <h2>Your Emoji Rangoli</h2>
+          <img src={imageUrl} alt="Generated Emoji Rangoli" style={{ maxWidth: '100%' }} />
+        </div>
+      )}
     </div>
   );
 }
